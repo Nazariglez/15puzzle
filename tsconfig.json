@@ -1,0 +1,11 @@
+{
+    "include": [
+        "./src/**/*.ts",
+        "typings/pixi-tween.d.ts"
+    ],
+    "compilerOptions": {
+        "sourceMap": true,
+        "target": "es5",
+        "module": "commonjs"
+    }
+}

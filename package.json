@@ -1,0 +1,26 @@
+{
+  "name": "15puzzle",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "webpack --progress --colors --watch",
+    "build": "NODE_ENV=production webpack --progress --colors",
+    "serve": "http-server ./dist"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "pixi.js": "^4.8.5"
+  },
+  "devDependencies": {
+    "@types/pixi.js": "^4.8.6",
+    "http-server": "^0.11.1",
+    "pixi-tween": "^0.2.0",
+    "terser-webpack-plugin": "^1.2.2",
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.3.3",
+    "webpack": "^4.29.3",
+    "webpack-cli": "^3.2.3"
+  }
+}
