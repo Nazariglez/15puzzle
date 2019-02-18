@@ -11,10 +11,12 @@ class Game {
     private _time: number = 0;
 
     private _size: number;
+    private _seed: number;
 
-    constructor(size?: number) {
+    constructor(size?: number, seed: number = Date.now()) {
         this._size = size;
         this._view = new GameView();
+        this._seed = seed;
         this.reset();
         window.addEventListener("resize", this._view.onResize);
     }
@@ -31,7 +33,7 @@ class Game {
     }
 
     reset() {
-        this._board = new Board(this._size);
+        this._board = new Board(this._size, this._seed);
         this._view.clear();
         this._view.init(this._board);
         this._view.onClickReset = () => {

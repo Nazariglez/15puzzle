@@ -1,10 +1,14 @@
 import { Point, Direction } from './utils';
+import Random from './Random';
 
 class Board {
     private _grid: number[];
     readonly size: number;
 
-    constructor(size: number = 4) {
+    private _randomGenerator: Random;
+
+    constructor(size: number = 4, seed: number = Date.now()) {
+        this._randomGenerator = new Random(seed);
         this.size = size;
         this._generate();
     }
@@ -176,7 +180,6 @@ class Board {
     }
 
     private _randomMove() {
-        console.log("im here1");
         let index = -1;
         for (let i = 0; i < this._grid.length; i++) {
             if (this._grid[i] === 0) {
@@ -185,7 +188,6 @@ class Board {
             }
         }
 
-        console.log(index);
         if (index !== -1) {
             let pos = this.getPointFromIndex(index);
             let dirs = [Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN];
@@ -193,7 +195,8 @@ class Board {
             let dir = Direction.NONE;
             let point = { x: pos.x, y: pos.y };
             while (!canBeMoved && dirs.length) {
-                let indexOfDirs = Math.floor(Math.random() * dirs.length);
+                let rng = this._randomGenerator.get();
+                let indexOfDirs = Math.floor(rng * dirs.length);
                 let value: Direction = dirs.splice(indexOfDirs, 1)[0];
 
                 switch (value) {
