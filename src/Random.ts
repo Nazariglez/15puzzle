@@ -17,8 +17,12 @@ export default class Random {
 
     get(): number {
         this._inc++;
-        let value = ((987654321 * this._seed + (this._inc ** this._inc)) % 645) / 645;
+        let inc = this._inc % 143;
+        inc = inc ** inc;
+
+        let value = ((987654321 * this._seed + inc) % 645) / 645;
         this._seed = value;
+
         return value;
     }
 }

@@ -165,16 +165,13 @@ class Board {
     private _generate() {
         let grid: number[] = [];
         let total = this.size * this.size;
-        for (let i = 1; i < total; i++) {
+        for (let i = 0; i < total; i++) {
             grid.push(i);
         }
-        grid.push(0);
 
         this._grid = grid;
-        // grid.sort((a, b) => {
-        //    return 0.5 - Math.random();
-        // });
-        for (let i = 0; i < 4; i++) {
+
+        for (let i = 0; i < 1000; i++) {
             this._randomMove();
         }
 
@@ -193,7 +190,6 @@ class Board {
             let pos = this.getPointFromIndex(index);
             let dirs = [Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN];
             let canBeMoved = false;
-            let dir = Direction.NONE;
             let point = { x: pos.x, y: pos.y };
             while (!canBeMoved && dirs.length) {
                 let rng = this._randomGenerator.get();
@@ -218,14 +214,12 @@ class Board {
                 let n = this.getIndexFromCoords(point.x, point.y);
                 if (n !== -1) {
                     canBeMoved = true;
-                    dir = value;
                 }
             }
 
             if (canBeMoved) {
                 this.swapCells(pos, point);
             }
-
         }
     }
 
