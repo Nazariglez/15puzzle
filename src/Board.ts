@@ -165,15 +165,16 @@ class Board {
     private _generate() {
         let grid: number[] = [];
         let total = this.size * this.size;
-        for (let i = 0; i < total; i++) {
+        for (let i = 1; i < total; i++) {
             grid.push(i);
         }
+        grid.push(0);
 
         this._grid = grid;
         // grid.sort((a, b) => {
         //    return 0.5 - Math.random();
         // });
-        for (let i = 0; i < 1000; i++) {
+        for (let i = 0; i < 4; i++) {
             this._randomMove();
         }
 

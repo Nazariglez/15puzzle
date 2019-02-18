@@ -32,12 +32,16 @@ class Game {
         cancelAnimationFrame(this._raf);
     }
 
-    reset() {
-        this._board = new Board(this._size, this._seed);
+    reset(seed?: number) {
+        this._board = new Board(this._size, seed || this._seed);
         this._view.clear();
         this._view.init(this._board);
         this._view.onClickReset = () => {
             this.reset();
+        };
+        this._view.onClickNewGame = () => {
+            this._seed = Date.now();
+            this.reset(this._seed);
         };
     }
 

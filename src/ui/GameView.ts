@@ -11,10 +11,12 @@ export default class GameView {
     mainContainer: PIXI.Container;
     board: BoardView;
     resetButton: PIXI.Sprite;
+    newGameButton: PIXI.Sprite;
     winScreen: WinScreen;
-    resetTween: PIXI.tween.Tween;
+    newGameTween: PIXI.tween.Tween;
 
     onClickReset: () => void = () => { };
+    onClickNewGame: () => void = () => { };
 
     constructor() {
         this.app = new PIXI.Application({
@@ -26,8 +28,14 @@ export default class GameView {
         this.app.stage.addChild(this.mainContainer);
         this.resize();
 
+        this.newGameButton = this._createNewGameButton();
+        this.newGameButton.position.set(-(WIDTH * 0.25), HEIGHT * 0.5 - 20 - this.newGameButton.height * 0.5);
+        this.mainContainer.addChild(this.newGameButton);
+        this.newGameButton.on("pointertap", this._onNewGame);
+
+
         this.resetButton = this._createResetButton();
-        this.resetButton.position.set(0, HEIGHT * 0.5 - 20 - this.resetButton.height * 0.5);
+        this.resetButton.position.set(WIDTH * 0.25, HEIGHT * 0.5 - 20 - this.resetButton.height * 0.5);
         this.mainContainer.addChild(this.resetButton);
         this.resetButton.on("pointertap", this._onReset);
     }
@@ -49,10 +57,10 @@ export default class GameView {
         this.mainContainer.removeChild(this.winScreen);
         this.winScreen = null;
 
-        if (this.resetTween) {
-            this.resetTween.stop();
-            this.resetTween.reset();
-            this.resetButton.scale.set(1, 1);
+        if (this.newGameTween) {
+            this.newGameTween.stop();
+            this.newGameTween.reset();
+            this.newGameButton.scale.set(1, 1);
         }
     }
 
@@ -80,13 +88,59 @@ export default class GameView {
         this.onClickReset();
     };
 
+    private _onNewGame = () => {
+        this.onClickNewGame();
+    };
+
     private _onGameOver = () => {
         this.winScreen.visible = true;
         this.winScreen.winAnimation(1500);
         this.mainContainer.removeChild(this.resetButton);
         this.mainContainer.addChild(this.resetButton);
-        this.resetTween.start();
+        this.mainContainer.removeChild(this.newGameButton);
+        this.mainContainer.addChild(this.newGameButton);
+        this.newGameTween.start();
     };
+
+    private _createNewGameButton(): PIXI.Sprite {
+        let texture = new PIXI.Graphics()
+            .beginFill(0x203010)
+            .drawCircle(0, 0, 50)
+            .endFill()
+            .lineStyle(6, 0xc0ffc0)
+            .drawCircle(0, 0, 50)
+            .generateCanvasTexture();
+
+
+        let btn = new PIXI.Sprite(texture);
+        btn.anchor.set(0.5, 0.5);
+        btn.pivot.set(0.5, 0.5);
+
+        let text = new PIXI.Text("NEW", {
+            align: "center",
+            fontFamily: "Helvetica, Arial",
+            fontSize: "24px",
+            fill: 0xffffff,
+        });
+        text.anchor.set(0.5, 0.5);
+        text.pivot.set(0.5, 0.5);
+        btn.addChild(text);
+
+        btn.buttonMode = true;
+        btn.interactive = true;
+
+        this.newGameTween = PIXI.tweenManager.createTween(btn.scale);
+        this.newGameTween.time = 1600;
+        this.newGameTween.loop = true;
+        this.newGameTween.pingPong = true;
+        this.newGameTween.easing = PIXI.tween.Easing.inOutBack();
+        this.newGameTween.to({
+            x: 0.85,
+            y: 0.85
+        });
+
+        return btn;
+    }
 
     private _createResetButton(): PIXI.Sprite {
         let texture = new PIXI.Graphics()
@@ -113,16 +167,6 @@ export default class GameView {
 
         btn.buttonMode = true;
         btn.interactive = true;
-
-        this.resetTween = PIXI.tweenManager.createTween(btn.scale);
-        this.resetTween.time = 1600;
-        this.resetTween.loop = true;
-        this.resetTween.pingPong = true;
-        this.resetTween.easing = PIXI.tween.Easing.inOutBack();
-        this.resetTween.to({
-            x: 0.85,
-            y: 0.85
-        });
 
         return btn;
     }
