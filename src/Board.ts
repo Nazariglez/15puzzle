@@ -40,6 +40,7 @@ class Board {
     }
 
     getIndexFromCoords(x: number, y: number): number {
+        if (x < 0 || x > this.size - 1 || y < 0 || y > this.size - 1) { return -1; }
         let row = y * this.size;
         return row + x;
     }
@@ -100,6 +101,14 @@ class Board {
         return this.canMoveRowColumn(x, y);
     }
 
+    swapCells(p1: Point, p2: Point) {
+        let v1 = this.getValue(p1.x, p1.y);
+        let v2 = this.getValue(p2.x, p2.y);
+
+        this.setValue(p1.x, p1.y, v2);
+        this.setValue(p2.x, p2.y, v1);
+    }
+
     canMoveRowColumn(x: number, y: number): Direction {
         if (x >= 1) {
             for (let i = x - 1; i >= 0; i--) {
@@ -156,11 +165,64 @@ class Board {
             grid.push(i);
         }
 
-        grid.sort((a, b) => {
-            return 0.5 - Math.random();
-        });
-
         this._grid = grid;
+        // grid.sort((a, b) => {
+        //    return 0.5 - Math.random();
+        // });
+        for (let i = 0; i < 1000; i++) {
+            this._randomMove();
+        }
+
+    }
+
+    private _randomMove() {
+        console.log("im here1");
+        let index = -1;
+        for (let i = 0; i < this._grid.length; i++) {
+            if (this._grid[i] === 0) {
+                index = i;
+                break;
+            }
+        }
+
+        console.log(index);
+        if (index !== -1) {
+            let pos = this.getPointFromIndex(index);
+            let dirs = [Direction.LEFT, Direction.RIGHT, Direction.UP, Direction.DOWN];
+            let canBeMoved = false;
+            let dir = Direction.NONE;
+            let point = { x: pos.x, y: pos.y };
+            while (!canBeMoved && dirs.length) {
+                let indexOfDirs = Math.floor(Math.random() * dirs.length);
+                let value: Direction = dirs.splice(indexOfDirs, 1)[0];
+
+                switch (value) {
+                    case Direction.LEFT:
+                        point.x--;
+                        break;
+                    case Direction.RIGHT:
+                        point.x++;
+                        break;
+                    case Direction.UP:
+                        point.y--;
+                        break;
+                    case Direction.DOWN:
+                        point.y++;
+                        break;
+                }
+
+                let n = this.getIndexFromCoords(point.x, point.y);
+                if (n !== -1) {
+                    canBeMoved = true;
+                    dir = value;
+                }
+            }
+
+            if (canBeMoved) {
+                this.swapCells(pos, point);
+            }
+
+        }
     }
 
 }
